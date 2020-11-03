@@ -1,10 +1,9 @@
 package com.seanlandis.orderservice
 
 class Order(products: List<Product>, private val discounts: List<Discount>) {
-    private val productCounts: Map<Product, Int>
+     var productCounts: MutableMap<Product, Int> = HashMap()
 
     init {
-        productCounts = HashMap()
         products.forEach {
             val count = productCounts.getOrDefault(it, 0)
             productCounts[it] = count + 1
@@ -32,6 +31,6 @@ class Order(products: List<Product>, private val discounts: List<Discount>) {
     private fun applyDiscount(discount: Discount, count: Int): Int {
         val quotient = (count * discount.dividend) / discount.divisor
         val remainder = (count * discount.dividend) % discount.divisor
-        return if(remainder > 0) quotient + 1 else quotient
+        return if (remainder > 0) quotient + 1 else quotient
     }
 }

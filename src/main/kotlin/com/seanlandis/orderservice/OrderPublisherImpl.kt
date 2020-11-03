@@ -4,9 +4,9 @@ import org.apache.activemq.command.ActiveMQTextMessage
 import org.springframework.jms.core.JmsTemplate
 
 class OrderPublisherImpl(private val jmsTemplate: JmsTemplate) : OrderPublisher {
-    override fun sendTextMessage() {
+    override fun sendTextMessage(message: String) {
         val msg = ActiveMQTextMessage()
-        msg.text = "Order Submitted"
+        msg.text = message
         jmsTemplate.send("orderSubmitted") { msg }
     }
 }

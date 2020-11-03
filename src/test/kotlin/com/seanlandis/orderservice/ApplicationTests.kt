@@ -23,7 +23,7 @@ class ApplicationTests {
     }
 
     @Test
-    fun givenAppInitialized_whenSubtotalOfProductsWithDicounts_thenReturnCorrectSubtotal() {
+    fun givenAppInitialized_whenSubtotalOfProductsWithDiscounts_thenReturnCorrectSubtotal() {
         val result = shell?.evaluate({ "subtotal Apple,Apple,Orange,Orange,Orange true" })
 
         assertEquals("$1.10", result)
@@ -32,6 +32,13 @@ class ApplicationTests {
     @Test
     fun givenAppInitialized_whenOrder_thenReturnNull() {
         val result = shell?.evaluate({ "order Apple,Apple,Orange,Orange,Orange" })
+
+        assertNull(result)
+    }
+
+    @Test
+    fun givenAppInitialized_whenOrderTooMany_thenReturnNull() {
+        val result = shell?.evaluate({ "order Apple,Apple,Apple,Orange,Orange,Orange,Orange" })
 
         assertNull(result)
     }

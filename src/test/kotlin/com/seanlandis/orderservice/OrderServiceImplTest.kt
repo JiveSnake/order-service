@@ -1,5 +1,6 @@
 package com.seanlandis.orderservice
 
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -57,9 +58,26 @@ internal class OrderServiceImplTest {
     }
 
     @Test
-    fun givenEmptyString_whenSubmitOrder_thenReturnCorrectCurrencyAmount() {
-        orderService.submitOrder(listOf(""))
+    fun givenEnoughString_whenSubmitOrder_thenReturnCorrectCurrencyAmount() {
+        `when`(mockProductRepository.getStockByProductName(anyString())).thenReturn(1)
 
-        verify(mockOrderPublisher).sendTextMessage()
+        orderService.submitOrder(listOf("apple"))
+
+        argumentCaptor<String>().apply {
+            verify(mockOrderPublisher, times(1)).sendTextMessage(capture())
+            assertEquals("Order Successful", firstValue)
+        }
+    }
+
+    @Test
+    fun givenNotEnoughStock_whenSubmitorder_thenReturnNullWithCorrectMessage() {
+        `when`(mockProductRepository.getStockByProductName(anyString())).thenReturn(1)
+
+        orderService.submitOrder(listOf("apple", "apple"))
+
+        argumentCaptor<String>().apply {
+            verify(mockOrderPublisher, times(1)).sendTextMessage(capture())
+            assertEquals("Not enough stock to complete order", firstValue)
+        }
     }
 }

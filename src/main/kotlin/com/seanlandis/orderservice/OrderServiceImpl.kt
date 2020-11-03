@@ -13,8 +13,29 @@ class OrderServiceImpl(private val orderPublisher: OrderPublisher, private val p
     }
 
     override fun submitOrder(productNames: List<String>) {
-        createOrder(productNames, discounts).calculateSubtotal()
-        orderPublisher.sendTextMessage()
+        var message = "Order Successful"
+        if (orderIsPossible(productNames)) {
+            val order = createOrder(productNames, discounts)
+            for (productCount in order.productCounts) {
+                productsRepository.reduceProductStock(productCount.key.name, productCount.value)
+            }
+        } else message = "Not enough stock to complete order"
+        orderPublisher.sendTextMessage(message)
+    }
+
+    private fun orderIsPossible(productNames: List<String>): Boolean {
+        var orderIsPossible = true
+        val productCounts = HashMap<String, Int>()
+        for (name in productNames) {
+            val count = productCounts.getOrDefault(name, 0)
+            productCounts[name] = count + 1
+        }
+        for (productCount in productCounts) {
+            val stock = productsRepository.getStockByProductName(productCount.key)
+            if (stock == null || stock < productCount.value) orderIsPossible = false
+        }
+
+        return orderIsPossible
     }
 
     private fun createOrder(productNames: List<String>, discounts: List<Discount>): Order {

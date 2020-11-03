@@ -1,5 +1,5 @@
 package com.seanlandis.orderservice
 
 interface OrderPublisher {
-    fun sendTextMessage()
+    fun sendTextMessage(message: String)
 }
