@@ -20,4 +20,11 @@ class ApplicationTests {
 
         assertEquals("$2.05", subtotal)
     }
+
+    @Test
+    fun givenAppInitialized_whenSubtotalOfProductsWithDicounts_thenReturnCorrectSubtotal() {
+        val subtotal = shell?.evaluate({ "subtotal Apple,Apple,Orange,Orange,Orange true" })
+
+        assertEquals("$1.10", subtotal)
+    }
 }

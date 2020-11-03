@@ -9,16 +9,17 @@ import org.mockito.Mockito.*
 internal class OrderServiceImplTest {
     private lateinit var orderService: OrderService
     private val mockProductRepository = mock(ProductRepository::class.java)
+    private val discounts = ArrayList<Discount>()
 
     @BeforeEach
     fun setUp() {
-        orderService = OrderServiceImpl(mockProductRepository)
+        orderService = OrderServiceImpl(mockProductRepository, discounts)
     }
 
     @Test
     fun givenSingleName_whenCalculateSubtotal_thenReturnCorrectCurrencyAmount() {
         val product = Product("apple", CurrencyAmount(1, 0))
-        val expected = Order(listOf(product))
+        val expected = Order(listOf(product), discounts)
         `when`(mockProductRepository.getProductByName(anyString())).thenReturn(product)
 
         val result = orderService.calculateSubtotal(listOf("Apple"))
@@ -29,7 +30,7 @@ internal class OrderServiceImplTest {
     @Test
     fun givenMultiNames_whenCalculateSubtotal_thenReturnCorrectCurrencyAmount() {
         val product = Product("apple", CurrencyAmount(1, 0))
-        val expected = Order(listOf(product, product))
+        val expected = Order(listOf(product, product), discounts)
         `when`(mockProductRepository.getProductByName(anyString())).thenReturn(product)
 
         val result = orderService.calculateSubtotal(listOf("Apple", "Apple"))
@@ -42,5 +43,16 @@ internal class OrderServiceImplTest {
         val result = orderService.calculateSubtotal(listOf(""))
 
         assertEquals(CurrencyAmount(0, 0), result)
+    }
+
+    @Test
+    fun givenSingleNameAndDiscount_whenCalculateSubtotalWithDiscount_thenReturnCorrectCurrencyAmount() {
+        val product = Product("apple", CurrencyAmount(1, 0))
+        val expected = Order(listOf(product), discounts)
+        `when`(mockProductRepository.getProductByName(anyString())).thenReturn(product)
+
+        val result = orderService.calculateSubtotalWithDiscounts(listOf("Apple"))
+
+        assertEquals(expected.calculateSubtotal(), result)
     }
 }

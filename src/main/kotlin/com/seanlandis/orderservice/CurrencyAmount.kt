@@ -8,6 +8,11 @@ data class CurrencyAmount(val dollar: Int, val cent: Int) {
         return CurrencyAmount(valueInPennies / 100, valueInPennies % 100 )
     }
 
+    operator fun times(multiplicand: Int): CurrencyAmount {
+        val valueInPennies = multiplicand * ((100 * dollar) + cent)
+        return CurrencyAmount(valueInPennies / 100, valueInPennies % 100 )
+    }
+
     override fun toString(): String {
         return String.format("$%d.%02d", dollar, cent)
     }

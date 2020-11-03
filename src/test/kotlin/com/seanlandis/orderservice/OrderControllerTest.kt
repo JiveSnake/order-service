@@ -19,7 +19,7 @@ internal class OrderControllerTest {
     @Test
     fun giveCommaSeparatedString_whenSubtotal_thenCallServiceWithListOfStrings() {
         `when`(orderService.calculateSubtotal(anyList())).thenReturn(CurrencyAmount(0, 0))
-        orderController.subtotal("Apple,Orange")
+        orderController.subtotal("Apple,Orange", false)
 
         argumentCaptor<List<String>>().apply {
             verify(orderService, times(1)).calculateSubtotal(capture())

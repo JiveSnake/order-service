@@ -5,11 +5,14 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class Config {
-//    @Bean
-//    fun orderController(orderService: OrderServiceImpl) = OrderController(orderService)
-
     @Bean
-    fun orderService(productRepository: ProductRepository) = OrderServiceImpl(productRepository)
+    fun orderService(productRepository: ProductRepository) = OrderServiceImpl(
+            productRepository,
+            listOf(
+                    Discount("apple", 1, 2),
+                    Discount("orange", 2, 3)
+            )
+    )
 
     @Bean
     fun productRepository() = ProductRepositoryImpl()

@@ -1,18 +1,19 @@
 package com.seanlandis.orderservice
 
-import org.springframework.context.annotation.Profile
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
-@Profile("!test")
 @ShellComponent
 class OrderController(private val orderService: OrderService) {
-    @ShellMethod("Calculate subtotal of comma-separated string of product names")
-    fun subtotal(@ShellOption products: String?): String {
+    @ShellMethod("Calculate subtotal of comma-separated string of product names.")
+    fun subtotal(products: String, @ShellOption(arity = 1, defaultValue = "false") applyDiscounts: Boolean): String {
         val subtotal = products
-                ?.split(",")
-                ?.let { orderService.calculateSubtotal(it) }
+                .split(",")
+                .let {
+                    if (applyDiscounts) orderService.calculateSubtotalWithDiscounts(it)
+                    else orderService.calculateSubtotal(it)
+                }
         return subtotal.toString()
     }
 }
