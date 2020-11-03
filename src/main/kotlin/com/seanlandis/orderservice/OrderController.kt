@@ -16,4 +16,9 @@ class OrderController(private val orderService: OrderService) {
                 }
         return subtotal.toString()
     }
+
+    @ShellMethod("Submit an order for the comma-separated string of product names.")
+    fun order(products: String) {
+        products.split(",").let { orderService.submitOrder(it) }
+    }
 }

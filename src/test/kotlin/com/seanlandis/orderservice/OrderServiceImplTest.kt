@@ -1,19 +1,19 @@
 package com.seanlandis.orderservice
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito.*
 
 internal class OrderServiceImplTest {
     private lateinit var orderService: OrderService
+    private val mockOrderPublisher = mock(OrderPublisher::class.java)
     private val mockProductRepository = mock(ProductRepository::class.java)
     private val discounts = ArrayList<Discount>()
 
     @BeforeEach
     fun setUp() {
-        orderService = OrderServiceImpl(mockProductRepository, discounts)
+        orderService = OrderServiceImpl(mockOrderPublisher, mockProductRepository, discounts)
     }
 
     @Test
@@ -54,5 +54,12 @@ internal class OrderServiceImplTest {
         val result = orderService.calculateSubtotalWithDiscounts(listOf("Apple"))
 
         assertEquals(expected.calculateSubtotal(), result)
+    }
+
+    @Test
+    fun givenEmptyString_whenSubmitOrder_thenReturnCorrectCurrencyAmount() {
+        orderService.submitOrder(listOf(""))
+
+        verify(mockOrderPublisher).sendTextMessage()
     }
 }

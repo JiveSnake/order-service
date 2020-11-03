@@ -2,6 +2,7 @@ package com.seanlandis.orderservice
 
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,15 +17,22 @@ class ApplicationTests {
 
     @Test
     fun givenAppInitialized_whenSubtotalOfProducts_thenReturnCorrectSubtotal() {
-        val subtotal = shell?.evaluate({ "subtotal Apple,Apple,Orange,Apple" })
+        val result = shell?.evaluate({ "subtotal Apple,Apple,Orange,Apple" })
 
-        assertEquals("$2.05", subtotal)
+        assertEquals("$2.05", result)
     }
 
     @Test
     fun givenAppInitialized_whenSubtotalOfProductsWithDicounts_thenReturnCorrectSubtotal() {
-        val subtotal = shell?.evaluate({ "subtotal Apple,Apple,Orange,Orange,Orange true" })
+        val result = shell?.evaluate({ "subtotal Apple,Apple,Orange,Orange,Orange true" })
 
-        assertEquals("$1.10", subtotal)
+        assertEquals("$1.10", result)
+    }
+
+    @Test
+    fun givenAppInitialized_whenOrder_thenReturnNull() {
+        val result = shell?.evaluate({ "order Apple,Apple,Orange,Orange,Orange" })
+
+        assertNull(result)
     }
 }

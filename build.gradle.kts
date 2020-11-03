@@ -18,6 +18,9 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.shell:spring-shell-starter:2.0.0.RELEASE")
+	implementation("org.springframework:spring-jms:5.3.0")
+	implementation("org.apache.activemq:activemq-core:5.7.0")
+	implementation("javax.jms:javax.jms-api:2.0.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
